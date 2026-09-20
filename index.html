@@ -3,18 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AUREVYX | Commerce AI</title>
+<title>AUREVYX // Commerce Intelligence</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 
-body{
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 50% 20%,#18304d 0,#080d15 38%,#030508 75%);
-  color:#eef7ff;
+:root{
+  --cyan:#54e7ff;
+  --blue:#438cff;
+  --violet:#9b6cff;
+  --green:#54ffb0;
+  --red:#ff5577;
+  --text:#eaf7ff;
+  --muted:#7591a8;
+  --panel:rgba(7,16,29,.62);
+  --border:rgba(100,210,255,.16);
+}
+
+html,body{
+  min-height:100%;
+  background:#02050a;
+  color:var(--text);
   font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+body{
   overflow-x:hidden;
+  background:
+    radial-gradient(circle at 50% 35%,rgba(36,137,255,.16),transparent 28%),
+    radial-gradient(circle at 15% 80%,rgba(110,60,255,.10),transparent 30%),
+    radial-gradient(circle at 85% 20%,rgba(0,220,255,.08),transparent 28%),
+    #02050a;
 }
 
 body:before{
@@ -22,230 +41,605 @@ body:before{
   position:fixed;
   inset:0;
   pointer-events:none;
-  background:
-    linear-gradient(rgba(100,180,255,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(100,180,255,.025) 1px,transparent 1px);
-  background-size:45px 45px;
+  opacity:.22;
+  background-image:
+    linear-gradient(rgba(100,200,255,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(100,200,255,.045) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,black,transparent 90%);
+}
+
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle,transparent 45%,rgba(0,0,0,.72) 100%);
 }
 
 .app{
-  width:min(1180px,94%);
+  width:min(1450px,94%);
   margin:auto;
   min-height:100vh;
-  padding:28px 0 50px;
+  padding:22px 0 70px;
+  position:relative;
+  z-index:1;
 }
 
 header{
+  height:58px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:45px;
 }
 
-.logo{
-  letter-spacing:7px;
-  font-weight:800;
-  font-size:20px;
-}
-
-.status{
+.brand{
   display:flex;
   align-items:center;
-  gap:8px;
-  color:#86a2b9;
+  gap:13px;
+}
+
+.brandMark{
+  width:38px;
+  height:38px;
+  border:1px solid rgba(100,225,255,.6);
+  border-radius:12px;
+  position:relative;
+  transform:rotate(45deg);
+  box-shadow:0 0 25px rgba(60,200,255,.2);
+}
+
+.brandMark:before{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border:1px solid var(--cyan);
+  border-radius:7px;
+}
+
+.brandText{
+  letter-spacing:6px;
+  font-size:17px;
+  font-weight:850;
+}
+
+.brandSub{
+  color:#56758d;
+  font-size:8px;
+  letter-spacing:2px;
+  margin-top:3px;
+}
+
+.connection{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  color:#7690a5;
+  font-size:10px;
+  letter-spacing:2px;
+}
+
+.connectionDot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 14px var(--green);
+}
+
+/* MAIN */
+
+.commandStage{
+  min-height:590px;
+  display:grid;
+  grid-template-columns:1fr 1.35fr 1fr;
+  gap:20px;
+  align-items:center;
+}
+
+.side{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.panel{
+  border:1px solid var(--border);
+  background:linear-gradient(145deg,rgba(14,29,47,.72),rgba(4,10,18,.54));
+  backdrop-filter:blur(20px);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.035),
+    0 18px 60px rgba(0,0,0,.25);
+  position:relative;
+  overflow:hidden;
+}
+
+.panel:before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:12%;
+  right:12%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  opacity:.35;
+}
+
+.panelTitle{
+  color:#5e819a;
+  font-size:9px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:13px;
+}
+
+.metric{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  margin-top:8px;
+}
+
+.metricValue{
+  font-size:31px;
+  font-weight:750;
+  letter-spacing:-1px;
+}
+
+.metricLabel{
+  color:#7894a9;
+  font-size:10px;
+}
+
+.good{
+  color:var(--green);
+}
+
+.warning{
+  color:#ffc75c;
+}
+
+.productMini{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:11px 0;
+  border-bottom:1px solid rgba(130,190,220,.08);
+}
+
+.productMini:last-child{
+  border-bottom:0;
+}
+
+.productName{
   font-size:12px;
 }
 
-.dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#55ffad;
-  box-shadow:0 0 14px #55ffad;
+.productStock{
+  font-size:10px;
+  color:#6f8ca2;
 }
 
-.hero{
-  text-align:center;
+/* CORE */
+
+.coreArea{
   display:flex;
   flex-direction:column;
   align-items:center;
+  justify-content:center;
+  position:relative;
+  min-height:570px;
 }
 
 .core{
-  width:180px;
-  height:180px;
+  width:245px;
+  height:245px;
   border-radius:50%;
   position:relative;
   display:grid;
   place-items:center;
-  margin:10px auto 35px;
   background:
-    radial-gradient(circle,#dff8ff 0 3%,#5cd8ff 5%,#1676aa 23%,#071827 58%,transparent 70%);
+    radial-gradient(circle at 50% 45%,
+      #ffffff 0 1.5%,
+      #8cf3ff 4%,
+      #39bfff 9%,
+      rgba(30,132,255,.75) 18%,
+      rgba(26,54,140,.42) 38%,
+      rgba(8,25,52,.18) 57%,
+      transparent 72%);
   box-shadow:
-    0 0 25px #35c8ff,
-    0 0 70px rgba(40,180,255,.45),
-    inset 0 0 40px rgba(255,255,255,.4);
-  animation:pulse 2.4s infinite ease-in-out;
-}
-
-.core:before,
-.core:after{
-  content:"";
-  position:absolute;
-  border:1px solid rgba(95,210,255,.5);
-  border-radius:50%;
+    0 0 25px rgba(73,220,255,.8),
+    0 0 75px rgba(45,155,255,.55),
+    0 0 150px rgba(88,72,255,.22);
+  animation:corePulse 3s ease-in-out infinite;
 }
 
 .core:before{
-  inset:-18px;
-  animation:spin 9s linear infinite;
+  content:"";
+  position:absolute;
+  inset:-28px;
+  border-radius:50%;
+  border:1px solid rgba(83,221,255,.42);
+  border-top-color:transparent;
+  border-bottom-color:rgba(143,100,255,.55);
+  animation:spin 8s linear infinite;
 }
 
 .core:after{
-  inset:-34px;
-  border-style:dashed;
-  opacity:.35;
-  animation:spin 14s linear infinite reverse;
+  content:"";
+  position:absolute;
+  inset:-55px;
+  border-radius:50%;
+  border:1px dashed rgba(83,190,255,.25);
+  border-left-color:rgba(160,104,255,.55);
+  animation:spin 15s linear infinite reverse;
 }
 
-@keyframes pulse{
+.coreInner{
+  width:92px;
+  height:92px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.65);
+  background:
+    radial-gradient(circle,#fff 0 3%,#a8f8ff 8%,#49cfff 28%,#146ca8 60%,transparent 72%);
+  box-shadow:0 0 45px rgba(88,226,255,.9);
+  animation:innerPulse 1.8s ease-in-out infinite;
+}
+
+.orbit{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(82,210,255,.22);
+  transform:rotateX(70deg);
+}
+
+.orbit.one{
+  width:390px;
+  height:150px;
+  animation:orbit1 9s linear infinite;
+}
+
+.orbit.two{
+  width:450px;
+  height:180px;
+  transform:rotateX(72deg) rotateZ(55deg);
+  animation:orbit2 13s linear infinite reverse;
+}
+
+.orbit.three{
+  width:340px;
+  height:340px;
+  transform:rotateY(65deg);
+  animation:orbit3 17s linear infinite;
+}
+
+.orbit i{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 16px var(--cyan);
+}
+
+.orbit.one i{top:-3px;left:50%}
+.orbit.two i{right:-3px;top:50%}
+.orbit.three i{bottom:10%;left:2%}
+
+.coreLabel{
+  margin-top:88px;
+  text-align:center;
+}
+
+.coreLabel strong{
+  display:block;
+  letter-spacing:7px;
+  font-size:13px;
+}
+
+.coreLabel span{
+  display:block;
+  margin-top:8px;
+  color:#63849a;
+  font-size:9px;
+  letter-spacing:3px;
+}
+
+@keyframes corePulse{
   0%,100%{transform:scale(1);filter:brightness(1)}
-  50%{transform:scale(1.06);filter:brightness(1.35)}
+  50%{transform:scale(1.045);filter:brightness(1.25)}
+}
+
+@keyframes innerPulse{
+  0%,100%{transform:scale(.94)}
+  50%{transform:scale(1.08)}
 }
 
 @keyframes spin{
   to{transform:rotate(360deg)}
 }
 
-h1{
-  font-size:clamp(34px,7vw,72px);
-  letter-spacing:8px;
-  font-weight:800;
+@keyframes orbit1{
+  to{transform:rotateX(70deg) rotateZ(360deg)}
 }
 
-.subtitle{
-  color:#7190a8;
-  letter-spacing:4px;
-  font-size:12px;
-  margin-top:10px;
+@keyframes orbit2{
+  to{transform:rotateX(72deg) rotateZ(-305deg)}
 }
+
+@keyframes orbit3{
+  to{transform:rotateY(65deg) rotateZ(360deg)}
+}
+
+/* SPEECH */
 
 .greeting{
-  margin-top:35px;
-  max-width:720px;
-  min-height:80px;
-  font-size:clamp(18px,3vw,27px);
+  position:absolute;
+  bottom:12px;
+  width:min(650px,100%);
+  text-align:center;
+  color:#d9effa;
+  font-size:18px;
   line-height:1.5;
-  color:#d9edf9;
+  min-height:55px;
 }
 
-.voice{
-  margin-top:28px;
-  width:90px;
-  height:90px;
-  border-radius:50%;
-  border:1px solid rgba(92,216,255,.65);
-  background:rgba(10,30,45,.7);
-  color:#7ee4ff;
-  font-size:32px;
-  cursor:pointer;
-  box-shadow:0 0 30px rgba(52,195,255,.25);
-  transition:.25s;
+.wave{
+  height:26px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  margin-top:18px;
 }
 
-.voice:hover{
-  transform:scale(1.08);
-  box-shadow:0 0 50px rgba(52,195,255,.5);
+.wave span{
+  width:3px;
+  height:7px;
+  border-radius:5px;
+  background:#54dfff;
+  box-shadow:0 0 9px #54dfff;
+  animation:wave 1s ease-in-out infinite;
 }
 
-.voice.listening{
-  animation:pulse 1s infinite;
-  background:#113c55;
+.wave span:nth-child(2){animation-delay:.08s}
+.wave span:nth-child(3){animation-delay:.16s}
+.wave span:nth-child(4){animation-delay:.24s}
+.wave span:nth-child(5){animation-delay:.32s}
+.wave span:nth-child(6){animation-delay:.24s}
+.wave span:nth-child(7){animation-delay:.16s}
+.wave span:nth-child(8){animation-delay:.08s}
+
+@keyframes wave{
+  0%,100%{height:7px;opacity:.45}
+  50%{height:24px;opacity:1}
 }
 
-.voiceText{
-  margin-top:14px;
-  color:#6f91a9;
-  font-size:12px;
+/* PRODUCTS */
+
+.sectionHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  margin:20px 0 15px;
+}
+
+.sectionHeader h2{
+  font-size:16px;
+  letter-spacing:4px;
+}
+
+.sectionHeader span{
+  color:#526f83;
+  font-size:9px;
   letter-spacing:2px;
 }
 
 .products{
-  margin-top:70px;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:18px;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
 }
 
-.card{
-  padding:22px;
-  border:1px solid rgba(130,190,220,.12);
-  background:rgba(9,18,28,.72);
-  backdrop-filter:blur(15px);
-  border-radius:20px;
-  box-shadow:0 12px 50px rgba(0,0,0,.3);
+.product{
+  min-height:190px;
+  position:relative;
+  overflow:hidden;
+  border-radius:18px;
+  border:1px solid rgba(105,180,220,.14);
+  background:linear-gradient(145deg,rgba(12,26,42,.78),rgba(4,9,16,.7));
+  padding:17px;
+  transition:.35s;
 }
 
-.card small{
-  color:#66849b;
-  text-transform:uppercase;
+.product:hover{
+  transform:translateY(-5px);
+  border-color:rgba(80,220,255,.4);
+  box-shadow:0 15px 50px rgba(30,160,255,.12);
+}
+
+.productGlow{
+  position:absolute;
+  width:120px;
+  height:120px;
+  right:-50px;
+  top:-50px;
+  border-radius:50%;
+  background:rgba(65,190,255,.12);
+  filter:blur(20px);
+}
+
+.productTag{
+  color:#5f8198;
+  font-size:8px;
   letter-spacing:2px;
+  text-transform:uppercase;
 }
 
-.card h2{
-  margin:10px 0;
-  font-size:20px;
+.product h3{
+  margin-top:11px;
+  font-size:14px;
+  max-width:190px;
 }
 
-.price{
-  font-size:28px;
+.productPrice{
+  margin-top:18px;
+  font-size:24px;
   font-weight:750;
 }
 
-.meta{
+.productBottom{
   display:flex;
   justify-content:space-between;
   margin-top:15px;
-  color:#8ba5b8;
-  font-size:13px;
+  color:#6e8ba0;
+  font-size:9px;
 }
 
-.alert{
-  margin-top:14px;
-  padding:10px 12px;
-  border-radius:10px;
-  background:rgba(255,190,70,.07);
-  color:#ffc966;
-  font-size:12px;
+.statusBar{
+  margin-top:10px;
+  height:3px;
+  border-radius:5px;
+  background:rgba(255,255,255,.05);
+  overflow:hidden;
+}
+
+.statusFill{
+  width:78%;
+  height:100%;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  box-shadow:0 0 10px var(--cyan);
+}
+
+/* COMMAND */
+
+.commandBar{
+  margin-top:20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border:1px solid rgba(90,190,240,.16);
+  background:rgba(5,13,23,.7);
+  border-radius:17px;
+  padding:10px;
+}
+
+.commandButton{
+  width:50px;
+  height:50px;
+  flex:none;
+  border-radius:14px;
+  border:1px solid rgba(78,220,255,.5);
+  background:rgba(16,45,65,.8);
+  color:#8feeff;
+  font-size:21px;
+  cursor:pointer;
+  box-shadow:0 0 25px rgba(60,200,255,.14);
+}
+
+.commandButton:hover{
+  box-shadow:0 0 35px rgba(60,200,255,.35);
+}
+
+.commandText{
+  flex:1;
+  color:#67859a;
+  font-size:11px;
+  letter-spacing:1px;
 }
 
 .console{
-  margin:30px auto 0;
-  max-width:760px;
-  min-height:70px;
-  padding:18px;
-  border:1px solid rgba(100,190,255,.12);
-  border-radius:16px;
-  background:rgba(3,10,17,.65);
-  color:#89aabd;
-  font-size:13px;
-  text-align:left;
+  margin-top:20px;
+  min-height:55px;
+  padding:15px 18px;
+  border:1px solid rgba(110,180,220,.10);
+  border-radius:14px;
+  background:rgba(2,7,13,.6);
+  color:#7897ab;
+  font-family:ui-monospace,SFMono-Regular,monospace;
+  font-size:10px;
 }
 
 footer{
   text-align:center;
-  margin-top:65px;
-  color:#405667;
-  font-size:11px;
-  letter-spacing:2px;
+  margin-top:30px;
+  color:#314958;
+  font-size:8px;
+  letter-spacing:3px;
+}
+
+@media(max-width:1050px){
+  .commandStage{
+    grid-template-columns:1fr;
+  }
+
+  .side{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .coreArea{
+    order:-1;
+  }
+
+  .products{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
 @media(max-width:600px){
-  .app{padding-top:20px}
-  header{margin-bottom:30px}
-  .core{width:145px;height:145px}
-  h1{letter-spacing:5px}
-  .products{grid-template-columns:1fr}
+  .app{width:92%}
+
+  .brandSub{display:none}
+
+  .commandStage{
+    min-height:auto;
+  }
+
+  .core{
+    width:180px;
+    height:180px;
+  }
+
+  .coreInner{
+    width:70px;
+    height:70px;
+  }
+
+  .orbit.one{
+    width:290px;
+    height:110px;
+  }
+
+  .orbit.two{
+    width:320px;
+    height:130px;
+  }
+
+  .orbit.three{
+    width:260px;
+    height:260px;
+  }
+
+  .coreLabel{
+    margin-top:65px;
+  }
+
+  .side{
+    grid-template-columns:1fr;
+  }
+
+  .products{
+    grid-template-columns:1fr;
+  }
+
+  .greeting{
+    position:relative;
+    bottom:auto;
+    margin-top:30px;
+  }
 }
 </style>
 </head>
@@ -255,141 +649,162 @@ footer{
 <div class="app">
 
 <header>
-  <div class="logo">AUREVYX</div>
-  <div class="status">
-    <span class="dot"></span>
-    COMMERCE AI
+  <div class="brand">
+    <div class="brandMark"></div>
+    <div>
+      <div class="brandText">AUREVYX</div>
+      <div class="brandSub">COMMERCE INTELLIGENCE SYSTEM</div>
+    </div>
+  </div>
+
+  <div class="connection">
+    <span class="connectionDot"></span>
+    SYSTEM ONLINE
   </div>
 </header>
 
-<main class="hero">
+<section class="commandStage">
 
-  <div class="core"></div>
+  <div class="side">
 
-  <h1>AUREVYX</h1>
-  <div class="subtitle">COMMERCE INTELLIGENCE</div>
-
-  <div class="greeting" id="greeting">
-    Initializing your commerce intelligence...
-  </div>
-
-  <button class="voice" id="voiceButton" aria-label="Voice control">
-    🎙️
-  </button>
-
-  <div class="voiceText" id="voiceText">
-    TAP TO SPEAK
-  </div>
-
-  <div class="console" id="console">
-    AUREVYX system ready. Shopify intelligence will appear here when the secure commerce API is connected.
-  </div>
-
-</main>
-
-<section class="products" id="products">
-
-  <div class="card">
-    <small>Store intelligence</small>
-    <h2>Waiting for Shopify</h2>
-    <div class="meta">
-      <span>Products</span>
-      <span>Connecting...</span>
+    <div class="panel">
+      <div class="panelTitle">Store Status</div>
+      <div class="metric">
+        <div class="metricValue">LIVE</div>
+        <div class="metricLabel">SHOPIFY</div>
+      </div>
+      <div class="metric">
+        <div class="metricValue good">8</div>
+        <div class="metricLabel">ACTIVE PRODUCTS</div>
+      </div>
     </div>
+
+    <div class="panel">
+      <div class="panelTitle">Inventory Intelligence</div>
+
+      <div class="productMini">
+        <span class="productName">X20 ChillCore</span>
+        <span class="productStock">50 units</span>
+      </div>
+
+      <div class="productMini">
+        <span class="productName">GT28 Pulse</span>
+        <span class="productStock">50 units</span>
+      </div>
+
+      <div class="productMini">
+        <span class="productName">Vision S1</span>
+        <span class="productStock warning">3 units</span>
+      </div>
+    </div>
+
   </div>
 
-  <div class="card">
-    <small>Voice control</small>
-    <h2>Owner command center</h2>
-    <div class="meta">
-      <span>Status</span>
-      <span>Ready</span>
+  <div class="coreArea">
+
+    <div class="core">
+      <div class="orbit one"><i></i></div>
+      <div class="orbit two"><i></i></div>
+      <div class="orbit three"><i></i></div>
+      <div class="coreInner"></div>
     </div>
+
+    <div class="coreLabel">
+      <strong>AUREVYX CORE</strong>
+      <span>OWNER CONTROL INTELLIGENCE</span>
+    </div>
+
+    <div class="wave">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="greeting" id="greeting">
+      Initializing AUREVYX Commerce Intelligence...
+    </div>
+
+  </div>
+
+  <div class="side">
+
+    <div class="panel">
+      <div class="panelTitle">Commerce Pulse</div>
+
+      <div class="metric">
+        <div class="metricValue">₹999</div>
+        <div class="metricLabel">CORE PRODUCT</div>
+      </div>
+
+      <div class="metric">
+        <div class="metricValue">0</div>
+        <div class="metricLabel">ORDERS</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelTitle">Active Intelligence</div>
+
+      <div class="productMini">
+        <span class="productName">BOGO Campaign</span>
+        <span class="productStock good">ACTIVE</span>
+      </div>
+
+      <div class="productMini">
+        <span class="productName">Pricing Monitor</span>
+        <span class="productStock good">READY</span>
+      </div>
+
+      <div class="productMini">
+        <span class="productName">Voice Agent</span>
+        <span class="productStock warning">CONNECTING</span>
+      </div>
+
+    </div>
+
   </div>
 
 </section>
 
-<footer>
-  AUREVYX • OWNER CONTROL SYSTEM
-</footer>
-
+<div class="sectionHeader">
+  <h2>PRODUCT INTELLIGENCE</h2>
+  <span>LIVE STORE DATA WILL REPLACE THIS PREVIEW</span>
 </div>
 
-<script>
-const greeting = document.getElementById("greeting");
-const voiceButton = document.getElementById("voiceButton");
-const voiceText = document.getElementById("voiceText");
-const consoleBox = document.getElementById("console");
+<section class="products">
 
-const message =
-  "Good morning, Yash. AUREVYX Commerce Intelligence is ready. Your store briefing will appear here once the secure Shopify connection is active.";
+  <article class="product">
+    <div class="productGlow"></div>
+    <div class="productTag">Smart Tech</div>
+    <h3>AUREVYX Vision S1 Smart Camera Glasses</h3>
+    <div class="productPrice">₹4,999</div>
+    <div class="productBottom">
+      <span>INVENTORY</span>
+      <span>3</span>
+    </div>
+    <div class="statusBar">
+      <div class="statusFill" style="width:12%"></div>
+    </div>
+  </article>
 
-function speak(text){
-  if(!("speechSynthesis" in window)) return;
+  <article class="product">
+    <div class="productGlow"></div>
+    <div class="productTag">Cooling Gear</div>
+    <h3>AUREVYX X20 ChillCore Phone Fan</h3>
+    <div class="productPrice">₹999</div>
+    <div class="productBottom">
+      <span>INVENTORY</span>
+      <span>50</span>
+    </div>
+    <div class="statusBar">
+      <div class="statusFill" style="width:65%"></div>
+    </div>
+  </article>
 
-  window.speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 0.95;
-  utterance.pitch = 1.0;
-  utterance.volume = 1;
-
-  window.speechSynthesis.speak(utterance);
-}
-
-window.addEventListener("load",()=>{
-  setTimeout(()=>{
-    greeting.textContent = message;
-    speak(message);
-  },900);
-});
-
-const SpeechRecognition =
-  window.SpeechRecognition ||
-  window.webkitSpeechRecognition;
-
-if(SpeechRecognition){
-
-  const recognition = new SpeechRecognition();
-  recognition.lang = "en-IN";
-  recognition.continuous = false;
-  recognition.interimResults = false;
-
-  voiceButton.onclick = ()=>{
-    recognition.start();
-    voiceButton.classList.add("listening");
-    voiceText.textContent = "LISTENING...";
-    consoleBox.textContent = "Listening for your command...";
-  };
-
-  recognition.onresult = event=>{
-    const text = event.results[0][0].transcript;
-
-    voiceText.textContent = "COMMAND RECEIVED";
-    consoleBox.textContent = "You said: " + text;
-
-    const reply =
-      "I heard your command. The secure Shopify commerce tools will execute it after we connect the backend.";
-
-    greeting.textContent = reply;
-    speak(reply);
-  };
-
-  recognition.onerror = ()=>{
-    voiceText.textContent = "TAP TO SPEAK";
-    consoleBox.textContent = "Microphone recognition could not start.";
-  };
-
-  recognition.onend = ()=>{
-    voiceButton.classList.remove("listening");
-    voiceText.textContent = "TAP TO SPEAK";
-  };
-
-}else{
-  voiceText.textContent = "VOICE NOT SUPPORTED";
-  voiceButton.disabled = true;
-}
-</script>
-
-</body>
-  </html>
+  <article class="product">
+    <div class="productGlow"></div>
+    <div class="productTag">Travel</div>
+    <h3>AUREVYX AeroPack Travel Bag</h3>
+    <div class="productPrice">₹699</div>
+    <div class="productBottom">
+      <span>INVENTORY</span>
+      <span>100</span
