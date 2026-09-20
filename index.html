@@ -3,37 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AUREVYX // Commerce Intelligence</title>
+<meta name="theme-color" content="#05070d">
+<title>AUREVYX | AI Commerce Command</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --cyan:#54e7ff;
-  --blue:#438cff;
-  --violet:#9b6cff;
-  --green:#54ffb0;
-  --red:#ff5577;
-  --text:#eaf7ff;
-  --muted:#7591a8;
-  --panel:rgba(7,16,29,.62);
-  --border:rgba(100,210,255,.16);
+  --bg:#03050a;
+  --panel:rgba(9,15,28,.72);
+  --line:rgba(92,180,255,.22);
+  --cyan:#55d9ff;
+  --blue:#4d7cff;
+  --green:#50f0a0;
+  --red:#ff5874;
+  --text:#edf7ff;
+  --muted:#8295aa;
+  --glow:0 0 35px rgba(65,190,255,.22);
 }
 
+*{box-sizing:border-box}
+
 html,body{
+  margin:0;
   min-height:100%;
-  background:#02050a;
+  background:
+    radial-gradient(circle at 50% 15%,rgba(35,90,180,.18),transparent 32%),
+    radial-gradient(circle at 80% 80%,rgba(0,210,255,.08),transparent 28%),
+    var(--bg);
   color:var(--text);
   font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 
 body{
   overflow-x:hidden;
-  background:
-    radial-gradient(circle at 50% 35%,rgba(36,137,255,.16),transparent 28%),
-    radial-gradient(circle at 15% 80%,rgba(110,60,255,.10),transparent 30%),
-    radial-gradient(circle at 85% 20%,rgba(0,220,255,.08),transparent 28%),
-    #02050a;
 }
 
 body:before{
@@ -41,770 +44,978 @@ body:before{
   position:fixed;
   inset:0;
   pointer-events:none;
-  opacity:.22;
-  background-image:
-    linear-gradient(rgba(100,200,255,.045) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(100,200,255,.045) 1px,transparent 1px);
+  background:
+    linear-gradient(rgba(90,170,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(90,170,255,.025) 1px,transparent 1px);
   background-size:42px 42px;
-  mask-image:linear-gradient(to bottom,black,transparent 90%);
+  mask-image:linear-gradient(to bottom,black,transparent);
 }
 
-body:after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:radial-gradient(circle,transparent 45%,rgba(0,0,0,.72) 100%);
+.hidden{display:none!important}
+
+button,input{
+  font:inherit;
 }
 
-.app{
-  width:min(1450px,94%);
-  margin:auto;
+button{
+  cursor:pointer;
+}
+
+.login-screen{
   min-height:100vh;
-  padding:22px 0 70px;
-  position:relative;
-  z-index:1;
-}
-
-header{
-  height:58px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.brand{
   display:flex;
   align-items:center;
-  gap:13px;
+  justify-content:center;
+  padding:22px;
 }
 
-.brandMark{
-  width:38px;
-  height:38px;
-  border:1px solid rgba(100,225,255,.6);
-  border-radius:12px;
-  position:relative;
-  transform:rotate(45deg);
-  box-shadow:0 0 25px rgba(60,200,255,.2);
-}
-
-.brandMark:before{
-  content:"";
-  position:absolute;
-  inset:8px;
-  border:1px solid var(--cyan);
-  border-radius:7px;
-}
-
-.brandText{
-  letter-spacing:6px;
-  font-size:17px;
-  font-weight:850;
-}
-
-.brandSub{
-  color:#56758d;
-  font-size:8px;
-  letter-spacing:2px;
-  margin-top:3px;
-}
-
-.connection{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  color:#7690a5;
-  font-size:10px;
-  letter-spacing:2px;
-}
-
-.connectionDot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 14px var(--green);
-}
-
-/* MAIN */
-
-.commandStage{
-  min-height:590px;
-  display:grid;
-  grid-template-columns:1fr 1.35fr 1fr;
-  gap:20px;
-  align-items:center;
-}
-
-.side{
-  display:flex;
-  flex-direction:column;
-  gap:15px;
-}
-
-.panel{
-  border:1px solid var(--border);
-  background:linear-gradient(145deg,rgba(14,29,47,.72),rgba(4,10,18,.54));
-  backdrop-filter:blur(20px);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:
-    inset 0 1px rgba(255,255,255,.035),
-    0 18px 60px rgba(0,0,0,.25);
+.login-card{
+  width:min(430px,100%);
+  padding:32px;
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:rgba(6,11,21,.82);
+  backdrop-filter:blur(22px);
+  box-shadow:var(--glow);
   position:relative;
   overflow:hidden;
 }
 
-.panel:before{
+.login-card:before{
   content:"";
   position:absolute;
-  top:0;
-  left:12%;
-  right:12%;
-  height:1px;
-  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
-  opacity:.35;
+  width:260px;
+  height:260px;
+  background:rgba(45,175,255,.13);
+  filter:blur(80px);
+  top:-140px;
+  left:50%;
+  transform:translateX(-50%);
 }
 
-.panelTitle{
-  color:#5e819a;
-  font-size:9px;
-  letter-spacing:3px;
+.logo{
+  text-align:center;
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:8px;
+  color:#fff;
+  text-shadow:0 0 22px rgba(80,210,255,.8);
+  position:relative;
+}
+
+.logo span{
+  color:var(--cyan);
+}
+
+.subtitle{
+  text-align:center;
+  color:var(--muted);
+  margin:10px 0 28px;
+  font-size:13px;
+  letter-spacing:2px;
   text-transform:uppercase;
-  margin-bottom:13px;
 }
 
-.metric{
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  margin-top:8px;
+.field{
+  margin-bottom:15px;
 }
 
-.metricValue{
-  font-size:31px;
-  font-weight:750;
-  letter-spacing:-1px;
-}
-
-.metricLabel{
-  color:#7894a9;
-  font-size:10px;
-}
-
-.good{
-  color:var(--green);
-}
-
-.warning{
-  color:#ffc75c;
-}
-
-.productMini{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:11px 0;
-  border-bottom:1px solid rgba(130,190,220,.08);
-}
-
-.productMini:last-child{
-  border-bottom:0;
-}
-
-.productName{
+.field label{
+  display:block;
+  color:#9cb2c9;
   font-size:12px;
+  margin-bottom:7px;
+  letter-spacing:1px;
 }
 
-.productStock{
-  font-size:10px;
-  color:#6f8ca2;
+.field input{
+  width:100%;
+  padding:14px 15px;
+  color:#fff;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(120,180,255,.18);
+  border-radius:13px;
+  outline:none;
 }
 
-/* CORE */
+.field input:focus{
+  border-color:var(--cyan);
+  box-shadow:0 0 18px rgba(85,217,255,.13);
+}
 
-.coreArea{
+.login-btn{
+  width:100%;
+  border:0;
+  padding:15px;
+  border-radius:14px;
+  color:#031018;
+  font-weight:800;
+  background:linear-gradient(100deg,#55d9ff,#668cff);
+  box-shadow:0 0 25px rgba(75,170,255,.3);
+  margin-top:7px;
+}
+
+.login-error{
+  color:var(--red);
+  text-align:center;
+  font-size:12px;
+  margin-top:15px;
+  min-height:18px;
+}
+
+.app{
+  min-height:100vh;
+  padding:18px;
+}
+
+.topbar{
   display:flex;
-  flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  max-width:1450px;
+  margin:auto;
+  padding:13px 16px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:rgba(7,12,23,.62);
+  backdrop-filter:blur(18px);
+  box-shadow:var(--glow);
+}
+
+.brand{
+  font-size:19px;
+  font-weight:900;
+  letter-spacing:4px;
+}
+
+.brand span{
+  color:var(--cyan);
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:11px;
+  color:#9db1c7;
+}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 13px var(--green);
+}
+
+.logout{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+  color:#b9c9d9;
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:11px;
+}
+
+.hero{
+  max-width:1450px;
+  margin:22px auto;
+  display:grid;
+  grid-template-columns:minmax(300px,1fr) minmax(330px,1.2fr);
+  gap:20px;
+}
+
+@media(max-width:850px){
+  .hero{
+    grid-template-columns:1fr;
+  }
+}
+
+.core-panel,
+.command-panel,
+.products-panel{
+  border:1px solid var(--line);
+  background:var(--panel);
+  backdrop-filter:blur(20px);
+  border-radius:24px;
+  box-shadow:var(--glow);
+}
+
+.core-panel{
+  min-height:420px;
+  display:flex;
   align-items:center;
   justify-content:center;
   position:relative;
-  min-height:570px;
+  overflow:hidden;
 }
 
 .core{
-  width:245px;
-  height:245px;
+  width:185px;
+  height:185px;
   border-radius:50%;
   position:relative;
-  display:grid;
-  place-items:center;
-  background:
-    radial-gradient(circle at 50% 45%,
-      #ffffff 0 1.5%,
-      #8cf3ff 4%,
-      #39bfff 9%,
-      rgba(30,132,255,.75) 18%,
-      rgba(26,54,140,.42) 38%,
-      rgba(8,25,52,.18) 57%,
-      transparent 72%);
-  box-shadow:
-    0 0 25px rgba(73,220,255,.8),
-    0 0 75px rgba(45,155,255,.55),
-    0 0 150px rgba(88,72,255,.22);
-  animation:corePulse 3s ease-in-out infinite;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform-style:preserve-3d;
+  animation:float 4s ease-in-out infinite;
 }
 
-.core:before{
+.core:before,
+.core:after{
   content:"";
   position:absolute;
   inset:-28px;
+  border:1px solid rgba(80,210,255,.42);
   border-radius:50%;
-  border:1px solid rgba(83,221,255,.42);
-  border-top-color:transparent;
-  border-bottom-color:rgba(143,100,255,.55);
   animation:spin 8s linear infinite;
 }
 
 .core:after{
-  content:"";
-  position:absolute;
   inset:-55px;
-  border-radius:50%;
-  border:1px dashed rgba(83,190,255,.25);
-  border-left-color:rgba(160,104,255,.55);
-  animation:spin 15s linear infinite reverse;
+  border-color:rgba(90,120,255,.25);
+  animation:spinReverse 13s linear infinite;
 }
 
-.coreInner{
-  width:92px;
-  height:92px;
+.core-orb{
+  width:110px;
+  height:110px;
   border-radius:50%;
-  border:1px solid rgba(255,255,255,.65);
   background:
-    radial-gradient(circle,#fff 0 3%,#a8f8ff 8%,#49cfff 28%,#146ca8 60%,transparent 72%);
-  box-shadow:0 0 45px rgba(88,226,255,.9);
-  animation:innerPulse 1.8s ease-in-out infinite;
+    radial-gradient(circle at 40% 35%,#fff 0 4%,#8cf0ff 10%,#267dff 38%,#091c52 70%,transparent 72%);
+  box-shadow:
+    0 0 30px #54ddff,
+    0 0 80px rgba(60,150,255,.65),
+    0 0 140px rgba(50,90,255,.32);
+  animation:pulse 2s ease-in-out infinite;
 }
 
-.orbit{
+.ring{
   position:absolute;
+  border:1px solid rgba(80,215,255,.38);
   border-radius:50%;
-  border:1px solid rgba(82,210,255,.22);
-  transform:rotateX(70deg);
 }
 
-.orbit.one{
-  width:390px;
-  height:150px;
-  animation:orbit1 9s linear infinite;
+.r1{
+  width:260px;
+  height:75px;
+  transform:rotateX(65deg) rotateZ(12deg);
+  animation:orbit1 7s linear infinite;
 }
 
-.orbit.two{
-  width:450px;
-  height:180px;
-  transform:rotateX(72deg) rotateZ(55deg);
-  animation:orbit2 13s linear infinite reverse;
+.r2{
+  width:280px;
+  height:90px;
+  transform:rotateY(66deg) rotateZ(-18deg);
+  animation:orbit2 9s linear infinite;
 }
 
-.orbit.three{
-  width:340px;
-  height:340px;
-  transform:rotateY(65deg);
-  animation:orbit3 17s linear infinite;
-}
-
-.orbit i{
+.core-label{
   position:absolute;
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:var(--cyan);
-  box-shadow:0 0 16px var(--cyan);
-}
-
-.orbit.one i{top:-3px;left:50%}
-.orbit.two i{right:-3px;top:50%}
-.orbit.three i{bottom:10%;left:2%}
-
-.coreLabel{
-  margin-top:88px;
+  bottom:38px;
   text-align:center;
 }
 
-.coreLabel strong{
+.core-label strong{
   display:block;
-  letter-spacing:7px;
-  font-size:13px;
+  letter-spacing:5px;
+  font-size:17px;
 }
 
-.coreLabel span{
-  display:block;
-  margin-top:8px;
-  color:#63849a;
-  font-size:9px;
+.core-label small{
+  color:var(--cyan);
+  letter-spacing:2px;
+}
+
+.command-panel{
+  padding:26px;
+  min-height:420px;
+}
+
+.eyebrow{
+  color:var(--cyan);
+  font-size:10px;
   letter-spacing:3px;
+  text-transform:uppercase;
 }
 
-@keyframes corePulse{
-  0%,100%{transform:scale(1);filter:brightness(1)}
-  50%{transform:scale(1.045);filter:brightness(1.25)}
+.command-panel h1{
+  margin:9px 0;
+  font-size:clamp(28px,5vw,46px);
+  line-height:1;
 }
 
-@keyframes innerPulse{
-  0%,100%{transform:scale(.94)}
-  50%{transform:scale(1.08)}
+.command-panel h1 span{
+  color:var(--cyan);
 }
 
-@keyframes spin{
-  to{transform:rotate(360deg)}
+.brief{
+  color:#8fa4ba;
+  line-height:1.7;
+  font-size:13px;
+  max-width:600px;
 }
 
-@keyframes orbit1{
-  to{transform:rotateX(70deg) rotateZ(360deg)}
-}
-
-@keyframes orbit2{
-  to{transform:rotateX(72deg) rotateZ(-305deg)}
-}
-
-@keyframes orbit3{
-  to{transform:rotateY(65deg) rotateZ(360deg)}
-}
-
-/* SPEECH */
-
-.greeting{
-  position:absolute;
-  bottom:12px;
-  width:min(650px,100%);
-  text-align:center;
-  color:#d9effa;
-  font-size:18px;
-  line-height:1.5;
-  min-height:55px;
-}
-
-.wave{
-  height:26px;
+.command-box{
+  margin-top:25px;
   display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:4px;
+  gap:9px;
+}
+
+.command-box input{
+  flex:1;
+  min-width:0;
+  padding:14px;
+  border-radius:13px;
+  border:1px solid rgba(80,190,255,.18);
+  background:rgba(0,0,0,.25);
+  color:#fff;
+  outline:none;
+}
+
+.command-box button,
+.voice-btn{
+  border:1px solid rgba(80,210,255,.35);
+  background:rgba(65,175,255,.1);
+  color:var(--cyan);
+  border-radius:13px;
+  padding:0 15px;
+}
+
+.voice-btn{
+  margin-top:10px;
+  padding:12px 15px;
+}
+
+.ai-output{
   margin-top:18px;
+  min-height:80px;
+  padding:14px;
+  border-radius:14px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.06);
+  color:#b7c9d9;
+  font-size:12px;
+  line-height:1.65;
 }
 
-.wave span{
-  width:3px;
-  height:7px;
-  border-radius:5px;
-  background:#54dfff;
-  box-shadow:0 0 9px #54dfff;
-  animation:wave 1s ease-in-out infinite;
+.metrics{
+  max-width:1450px;
+  margin:0 auto 20px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
 }
 
-.wave span:nth-child(2){animation-delay:.08s}
-.wave span:nth-child(3){animation-delay:.16s}
-.wave span:nth-child(4){animation-delay:.24s}
-.wave span:nth-child(5){animation-delay:.32s}
-.wave span:nth-child(6){animation-delay:.24s}
-.wave span:nth-child(7){animation-delay:.16s}
-.wave span:nth-child(8){animation-delay:.08s}
-
-@keyframes wave{
-  0%,100%{height:7px;opacity:.45}
-  50%{height:24px;opacity:1}
+@media(max-width:750px){
+  .metrics{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
-/* PRODUCTS */
+.metric{
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:rgba(7,13,24,.65);
+}
 
-.sectionHeader{
+.metric-label{
+  color:#73889d;
+  font-size:10px;
+  letter-spacing:2px;
+}
+
+.metric-value{
+  margin-top:7px;
+  font-size:25px;
+  font-weight:800;
+}
+
+.products-panel{
+  max-width:1450px;
+  margin:0 auto;
+  padding:22px;
+}
+
+.section-head{
   display:flex;
   justify-content:space-between;
-  align-items:end;
-  margin:20px 0 15px;
+  align-items:center;
+  margin-bottom:18px;
 }
 
-.sectionHeader h2{
-  font-size:16px;
-  letter-spacing:4px;
+.section-head h2{
+  margin:0;
+  font-size:18px;
 }
 
-.sectionHeader span{
-  color:#526f83;
-  font-size:9px;
-  letter-spacing:2px;
+.refresh{
+  border:1px solid rgba(80,210,255,.25);
+  background:rgba(80,210,255,.08);
+  color:var(--cyan);
+  border-radius:10px;
+  padding:9px 13px;
+  font-size:11px;
 }
 
 .products{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:14px;
+  gap:13px;
+}
+
+@media(max-width:1000px){
+  .products{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:550px){
+  .products{
+    grid-template-columns:1fr;
+  }
 }
 
 .product{
-  min-height:190px;
-  position:relative;
-  overflow:hidden;
-  border-radius:18px;
-  border:1px solid rgba(105,180,220,.14);
-  background:linear-gradient(145deg,rgba(12,26,42,.78),rgba(4,9,16,.7));
   padding:17px;
-  transition:.35s;
+  border:1px solid rgba(100,170,255,.14);
+  border-radius:17px;
+  background:rgba(255,255,255,.025);
+  transition:.25s;
 }
 
 .product:hover{
-  transform:translateY(-5px);
-  border-color:rgba(80,220,255,.4);
-  box-shadow:0 15px 50px rgba(30,160,255,.12);
+  transform:translateY(-3px);
+  border-color:rgba(85,217,255,.38);
+  box-shadow:0 10px 35px rgba(0,0,0,.25);
 }
 
-.productGlow{
-  position:absolute;
-  width:120px;
-  height:120px;
-  right:-50px;
-  top:-50px;
-  border-radius:50%;
-  background:rgba(65,190,255,.12);
-  filter:blur(20px);
+.product-title{
+  font-weight:700;
+  line-height:1.4;
+  min-height:48px;
 }
 
-.productTag{
-  color:#5f8198;
-  font-size:8px;
-  letter-spacing:2px;
-  text-transform:uppercase;
+.product-price{
+  color:var(--cyan);
+  font-size:21px;
+  font-weight:800;
+  margin:9px 0;
 }
 
-.product h3{
-  margin-top:11px;
-  font-size:14px;
-  max-width:190px;
-}
-
-.productPrice{
-  margin-top:18px;
-  font-size:24px;
-  font-weight:750;
-}
-
-.productBottom{
+.product-meta{
   display:flex;
   justify-content:space-between;
-  margin-top:15px;
-  color:#6e8ba0;
-  font-size:9px;
-}
-
-.statusBar{
-  margin-top:10px;
-  height:3px;
-  border-radius:5px;
-  background:rgba(255,255,255,.05);
-  overflow:hidden;
-}
-
-.statusFill{
-  width:78%;
-  height:100%;
-  background:linear-gradient(90deg,var(--cyan),var(--violet));
-  box-shadow:0 0 10px var(--cyan);
-}
-
-/* COMMAND */
-
-.commandBar{
-  margin-top:20px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  border:1px solid rgba(90,190,240,.16);
-  background:rgba(5,13,23,.7);
-  border-radius:17px;
-  padding:10px;
-}
-
-.commandButton{
-  width:50px;
-  height:50px;
-  flex:none;
-  border-radius:14px;
-  border:1px solid rgba(78,220,255,.5);
-  background:rgba(16,45,65,.8);
-  color:#8feeff;
-  font-size:21px;
-  cursor:pointer;
-  box-shadow:0 0 25px rgba(60,200,255,.14);
-}
-
-.commandButton:hover{
-  box-shadow:0 0 35px rgba(60,200,255,.35);
-}
-
-.commandText{
-  flex:1;
-  color:#67859a;
-  font-size:11px;
-  letter-spacing:1px;
-}
-
-.console{
-  margin-top:20px;
-  min-height:55px;
-  padding:15px 18px;
-  border:1px solid rgba(110,180,220,.10);
-  border-radius:14px;
-  background:rgba(2,7,13,.6);
-  color:#7897ab;
-  font-family:ui-monospace,SFMono-Regular,monospace;
+  color:#71869b;
   font-size:10px;
 }
 
-footer{
+.stock{
+  color:var(--green);
+}
+
+.stock.low{
+  color:#ffd15c;
+}
+
+.stock.out{
+  color:var(--red);
+}
+
+.loading{
+  color:#8094a9;
+  font-size:12px;
+  padding:25px 0;
+}
+
+.footer{
   text-align:center;
-  margin-top:30px;
-  color:#314958;
-  font-size:8px;
-  letter-spacing:3px;
+  color:#4d6073;
+  font-size:9px;
+  letter-spacing:2px;
+  padding:22px;
 }
 
-@media(max-width:1050px){
-  .commandStage{
-    grid-template-columns:1fr;
-  }
-
-  .side{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .coreArea{
-    order:-1;
-  }
-
-  .products{
-    grid-template-columns:repeat(2,1fr);
-  }
+@keyframes pulse{
+  0%,100%{transform:scale(.94)}
+  50%{transform:scale(1.06)}
 }
 
-@media(max-width:600px){
-  .app{width:92%}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
 
-  .brandSub{display:none}
+@keyframes spin{
+  to{transform:rotateX(65deg) rotateZ(372deg)}
+}
 
-  .commandStage{
-    min-height:auto;
-  }
+@keyframes spinReverse{
+  to{transform:rotateY(66deg) rotateZ(-378deg)}
+}
 
-  .core{
-    width:180px;
-    height:180px;
-  }
+@keyframes orbit1{
+  to{transform:rotateX(65deg) rotateZ(372deg)}
+}
 
-  .coreInner{
-    width:70px;
-    height:70px;
-  }
-
-  .orbit.one{
-    width:290px;
-    height:110px;
-  }
-
-  .orbit.two{
-    width:320px;
-    height:130px;
-  }
-
-  .orbit.three{
-    width:260px;
-    height:260px;
-  }
-
-  .coreLabel{
-    margin-top:65px;
-  }
-
-  .side{
-    grid-template-columns:1fr;
-  }
-
-  .products{
-    grid-template-columns:1fr;
-  }
-
-  .greeting{
-    position:relative;
-    bottom:auto;
-    margin-top:30px;
-  }
+@keyframes orbit2{
+  to{transform:rotateY(66deg) rotateZ(-378deg)}
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="logo">AUREV<span>YX</span></div>
+    <div class="subtitle">Commerce Intelligence Core</div>
 
-<header>
-  <div class="brand">
-    <div class="brandMark"></div>
-    <div>
-      <div class="brandText">AUREVYX</div>
-      <div class="brandSub">COMMERCE INTELLIGENCE SYSTEM</div>
+    <div class="field">
+      <label>OWNER EMAIL</label>
+      <input id="email" type="email" autocomplete="username" placeholder="Owner email">
     </div>
+
+    <div class="field">
+      <label>OWNER PASSWORD</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="Password">
+    </div>
+
+    <button id="loginBtn" class="login-btn">INITIALIZE AUREVYX</button>
+    <div id="loginError" class="login-error"></div>
   </div>
-
-  <div class="connection">
-    <span class="connectionDot"></span>
-    SYSTEM ONLINE
-  </div>
-</header>
-
-<section class="commandStage">
-
-  <div class="side">
-
-    <div class="panel">
-      <div class="panelTitle">Store Status</div>
-      <div class="metric">
-        <div class="metricValue">LIVE</div>
-        <div class="metricLabel">SHOPIFY</div>
-      </div>
-      <div class="metric">
-        <div class="metricValue good">8</div>
-        <div class="metricLabel">ACTIVE PRODUCTS</div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panelTitle">Inventory Intelligence</div>
-
-      <div class="productMini">
-        <span class="productName">X20 ChillCore</span>
-        <span class="productStock">50 units</span>
-      </div>
-
-      <div class="productMini">
-        <span class="productName">GT28 Pulse</span>
-        <span class="productStock">50 units</span>
-      </div>
-
-      <div class="productMini">
-        <span class="productName">Vision S1</span>
-        <span class="productStock warning">3 units</span>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="coreArea">
-
-    <div class="core">
-      <div class="orbit one"><i></i></div>
-      <div class="orbit two"><i></i></div>
-      <div class="orbit three"><i></i></div>
-      <div class="coreInner"></div>
-    </div>
-
-    <div class="coreLabel">
-      <strong>AUREVYX CORE</strong>
-      <span>OWNER CONTROL INTELLIGENCE</span>
-    </div>
-
-    <div class="wave">
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-    </div>
-
-    <div class="greeting" id="greeting">
-      Initializing AUREVYX Commerce Intelligence...
-    </div>
-
-  </div>
-
-  <div class="side">
-
-    <div class="panel">
-      <div class="panelTitle">Commerce Pulse</div>
-
-      <div class="metric">
-        <div class="metricValue">₹999</div>
-        <div class="metricLabel">CORE PRODUCT</div>
-      </div>
-
-      <div class="metric">
-        <div class="metricValue">0</div>
-        <div class="metricLabel">ORDERS</div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panelTitle">Active Intelligence</div>
-
-      <div class="productMini">
-        <span class="productName">BOGO Campaign</span>
-        <span class="productStock good">ACTIVE</span>
-      </div>
-
-      <div class="productMini">
-        <span class="productName">Pricing Monitor</span>
-        <span class="productStock good">READY</span>
-      </div>
-
-      <div class="productMini">
-        <span class="productName">Voice Agent</span>
-        <span class="productStock warning">CONNECTING</span>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<div class="sectionHeader">
-  <h2>PRODUCT INTELLIGENCE</h2>
-  <span>LIVE STORE DATA WILL REPLACE THIS PREVIEW</span>
 </div>
 
-<section class="products">
+<div id="app" class="app hidden">
 
-  <article class="product">
-    <div class="productGlow"></div>
-    <div class="productTag">Smart Tech</div>
-    <h3>AUREVYX Vision S1 Smart Camera Glasses</h3>
-    <div class="productPrice">₹4,999</div>
-    <div class="productBottom">
-      <span>INVENTORY</span>
-      <span>3</span>
-    </div>
-    <div class="statusBar">
-      <div class="statusFill" style="width:12%"></div>
-    </div>
-  </article>
+  <header class="topbar">
+    <div class="brand">AUREV<span>YX</span></div>
 
-  <article class="product">
-    <div class="productGlow"></div>
-    <div class="productTag">Cooling Gear</div>
-    <h3>AUREVYX X20 ChillCore Phone Fan</h3>
-    <div class="productPrice">₹999</div>
-    <div class="productBottom">
-      <span>INVENTORY</span>
-      <span>50</span>
+    <div class="status">
+      <span class="status-dot"></span>
+      SHOPIFY LINK ONLINE
     </div>
-    <div class="statusBar">
-      <div class="statusFill" style="width:65%"></div>
-    </div>
-  </article>
 
-  <article class="product">
-    <div class="productGlow"></div>
-    <div class="productTag">Travel</div>
-    <h3>AUREVYX AeroPack Travel Bag</h3>
-    <div class="productPrice">₹699</div>
-    <div class="productBottom">
-      <span>INVENTORY</span>
-      <span>100</span
+    <button id="logoutBtn" class="logout">LOGOUT</button>
+  </header>
+
+  <section class="hero">
+
+    <div class="core-panel">
+      <div class="core">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="core-orb"></div>
+      </div>
+
+      <div class="core-label">
+        <strong>AUREVYX CORE</strong>
+        <small>ONLINE</small>
+      </div>
+    </div>
+
+    <div class="command-panel">
+      <div class="eyebrow">Artificial Commerce Intelligence</div>
+
+      <h1>Good day, <span>Commander.</span></h1>
+
+      <p class="brief" id="brief">
+        Secure commerce intelligence channel initialized.
+        Authenticate to retrieve live Shopify intelligence.
+      </p>
+
+      <div class="command-box">
+        <input id="commandInput"
+               placeholder="Ask AUREVYX about your store...">
+        <button id="commandBtn">ASK</button>
+      </div>
+
+      <button id="voiceBtn" class="voice-btn">
+        ◉ ACTIVATE VOICE
+      </button>
+
+      <div id="aiOutput" class="ai-output">
+        Awaiting command.
+      </div>
+    </div>
+
+  </section>
+
+  <section class="metrics">
+
+    <div class="metric">
+      <div class="metric-label">PRODUCTS</div>
+      <div id="productCount" class="metric-value">--</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-label">TOTAL STOCK</div>
+      <div id="stockCount" class="metric-value">--</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-label">LOW STOCK</div>
+      <div id="lowStock" class="metric-value">--</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-label">STORE</div>
+      <div id="storeName" class="metric-value" style="font-size:16px">
+        CONNECTING
+      </div>
+    </div>
+
+  </section>
+
+  <section class="products-panel">
+
+    <div class="section-head">
+      <h2>LIVE PRODUCT INTELLIGENCE</h2>
+      <button id="refreshBtn" class="refresh">REFRESH</button>
+    </div>
+
+    <div id="products" class="products">
+      <div class="loading">Connecting to Shopify...</div>
+    </div>
+
+  </section>
+
+  <div class="footer">
+    AUREVYX COMMERCE INTELLIGENCE • SECURE OWNER CHANNEL
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL =
+  "https://oynrlokaeapbrnukxgqw.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "https://oynrlokaeapbrnukxgqw.supabase.co/functions/v1/aurevyx-api;
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+const loginScreen = document.getElementById("loginScreen");
+const app = document.getElementById("app");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const loginBtn = document.getElementById("loginBtn");
+const loginError = document.getElementById("loginError");
+
+const productsEl = document.getElementById("products");
+const productCount = document.getElementById("productCount");
+const stockCount = document.getElementById("stockCount");
+const lowStock = document.getElementById("lowStock");
+const storeName = document.getElementById("storeName");
+
+const aiOutput = document.getElementById("aiOutput");
+const commandInput = document.getElementById("commandInput");
+
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+
+  window.speechSynthesis.cancel();
+
+  const utterance =
+    new SpeechSynthesisUtterance(text);
+
+  utterance.rate = .95;
+  utterance.pitch = 1.0;
+  utterance.volume = 1;
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function showApp(){
+  loginScreen.classList.add("hidden");
+  app.classList.remove("hidden");
+}
+
+function showLogin(){
+  app.classList.add("hidden");
+  loginScreen.classList.remove("hidden");
+}
+
+async function login(){
+
+  loginError.textContent = "";
+  loginBtn.disabled = true;
+  loginBtn.textContent = "AUTHENTICATING...";
+
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+      email: email.value.trim(),
+      password: password.value
+    });
+
+  if(error){
+    loginError.textContent =
+      error.message;
+    loginBtn.disabled = false;
+    loginBtn.textContent =
+      "INITIALIZE AUREVYX";
+    return;
+  }
+
+  if(data.session){
+    showApp();
+
+    speak(
+      "AUREVYX online. Secure owner channel authenticated. Initializing commerce intelligence."
+    );
+
+    await loadShopify();
+  }
+
+  loginBtn.disabled = false;
+  loginBtn.textContent =
+    "INITIALIZE AUREVYX";
+}
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  window.speechSynthesis?.cancel();
+
+  showLogin();
+}
+
+function money(value){
+  const number = Number(value || 0);
+
+  return new Intl.NumberFormat("en-IN",{
+    style:"currency",
+    currency:"INR",
+    maximumFractionDigits:0
+  }).format(number);
+}
+
+function renderProducts(nodes){
+
+  productsEl.innerHTML = "";
+
+  if(!nodes || nodes.length === 0){
+    productsEl.innerHTML =
+      '<div class="loading">No Shopify products found.</div>';
+    return;
+  }
+
+  let totalStock = 0;
+  let low = 0;
+
+  nodes.forEach(product => {
+
+    totalStock += Number(product.totalInventory || 0);
+
+    if(
+      Number(product.totalInventory || 0) > 0 &&
+      Number(product.totalInventory || 0) <= 5
+    ){
+      low++;
+    }
+
+    const variant =
+      product.variants?.nodes?.[0];
+
+    const price =
+      variant?.price || 0;
+
+    const stock =
+      Number(product.totalInventory || 0);
+
+    let stockClass = "stock";
+    let stockText = `${stock} units`;
+
+    if(stock === 0){
+      stockClass += " out";
+      stockText = "OUT OF STOCK";
+    }else if(stock <= 5){
+      stockClass += " low";
+      stockText = `${stock} units • LOW`;
+    }
+
+    const card =
+      document.createElement("article");
+
+    card.className = "product";
+
+    card.innerHTML = `
+      <div class="product-title">
+        ${escapeHtml(product.title)}
+      </div>
+
+      <div class="product-price">
+        ${money(price)}
+      </div>
+
+      <div class="product-meta">
+        <span>${escapeHtml(product.status || "ACTIVE")}</span>
+        <span class="${stockClass}">
+          ${escapeHtml(stockText)}
+        </span>
+      </div>
+    `;
+
+    productsEl.appendChild(card);
+  });
+
+  productCount.textContent =
+    nodes.length;
+
+  stockCount.textContent =
+    totalStock.toLocaleString("en-IN");
+
+  lowStock.textContent =
+    low;
+}
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+async function loadShopify(){
+
+  productsEl.innerHTML =
+    '<div class="loading">AUREVYX is querying Shopify...</div>';
+
+  try{
+
+    const { data, error } =
+      await supabaseClient.functions.invoke(
+        "aurevyx-api",
+        {
+          body:{}
+        }
+      );
+
+    if(error){
+      throw error;
+    }
+
+    if(!data?.success){
+      throw new Error(
+        data?.error || "Shopify request failed."
+      );
+    }
+
+    const shop =
+      data.data?.shop;
+
+    const nodes =
+      data.data?.products?.nodes || [];
+
+    storeName.textContent =
+      shop?.name || "CONNECTED";
+
+    renderProducts(nodes);
+
+    document.getElementById("brief").textContent =
+      `Live Shopify connection established with ${shop?.name || "your store"}. ${nodes.length} products are currently visible to AUREVYX.`;
+
+    aiOutput.textContent =
+      `Connected securely as ${data.authenticatedUser || "owner"}. Live Shopify intelligence loaded.`;
+
+  }catch(error){
+
+    console.error(error);
+
+    productsEl.innerHTML =
+      `<div class="loading">
+        Secure Shopify connection failed:
+        ${escapeHtml(error.message)}
+      </div>`;
+
+    aiOutput.textContent =
+      "AUREVYX could not retrieve live Shopify data.";
+  }
+}
+
+function answerCommand(){
+
+  const command =
+    commandInput.value.trim().toLowerCase();
+
+  if(!command){
+    return;
+  }
+
+  const text =
+    `Command received: ${command}. Live commerce intelligence is connected. Advanced AI reasoning will be attached to this command channel next.`;
+
+  aiOutput.textContent = text;
+
+  speak(text);
+}
+
+loginBtn.addEventListener("click", login);
+
+password.addEventListener("keydown", e => {
+  if(e.key === "Enter"){
+    login();
+  }
+});
+
+email.addEventListener("keydown", e => {
+  if(e.key === "Enter"){
+    password.focus();
+  }
+});
+
+document.getElementById("logoutBtn")
+  .addEventListener("click", logout);
+
+document.getElementById("refreshBtn")
+  .addEventListener("click", loadShopify);
+
+document.getElementById("commandBtn")
+  .addEventListener("click", answerCommand);
+
+commandInput.addEventListener("keydown", e => {
+  if(e.key === "Enter"){
+    answerCommand();
+  }
+});
+
+document.getElementById("voiceBtn")
+  .addEventListener("click", () => {
+
+    speak(
+      "Voice channel active. AUREVYX is listening."
+    );
+
+    aiOutput.textContent =
+      "Voice channel activated.";
+  });
+
+async function boot(){
+
+  const {
+    data:{ session }
+  } = await supabaseClient.auth.getSession();
+
+  if(session){
+    showApp();
+    await loadShopify();
+  }else{
+    showLogin();
+  }
+}
+
+boot();
+</script>
+
+</body>
+</html>
