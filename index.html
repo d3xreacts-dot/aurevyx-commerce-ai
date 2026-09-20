@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AUREVYX | Commerce AI</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 20%,#18304d 0,#080d15 38%,#030508 75%);
+  color:#eef7ff;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(100,180,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(100,180,255,.025) 1px,transparent 1px);
+  background-size:45px 45px;
+}
+
+.app{
+  width:min(1180px,94%);
+  margin:auto;
+  min-height:100vh;
+  padding:28px 0 50px;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:45px;
+}
+
+.logo{
+  letter-spacing:7px;
+  font-weight:800;
+  font-size:20px;
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#86a2b9;
+  font-size:12px;
+}
+
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#55ffad;
+  box-shadow:0 0 14px #55ffad;
+}
+
+.hero{
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.core{
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  position:relative;
+  display:grid;
+  place-items:center;
+  margin:10px auto 35px;
+  background:
+    radial-gradient(circle,#dff8ff 0 3%,#5cd8ff 5%,#1676aa 23%,#071827 58%,transparent 70%);
+  box-shadow:
+    0 0 25px #35c8ff,
+    0 0 70px rgba(40,180,255,.45),
+    inset 0 0 40px rgba(255,255,255,.4);
+  animation:pulse 2.4s infinite ease-in-out;
+}
+
+.core:before,
+.core:after{
+  content:"";
+  position:absolute;
+  border:1px solid rgba(95,210,255,.5);
+  border-radius:50%;
+}
+
+.core:before{
+  inset:-18px;
+  animation:spin 9s linear infinite;
+}
+
+.core:after{
+  inset:-34px;
+  border-style:dashed;
+  opacity:.35;
+  animation:spin 14s linear infinite reverse;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1);filter:brightness(1)}
+  50%{transform:scale(1.06);filter:brightness(1.35)}
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+h1{
+  font-size:clamp(34px,7vw,72px);
+  letter-spacing:8px;
+  font-weight:800;
+}
+
+.subtitle{
+  color:#7190a8;
+  letter-spacing:4px;
+  font-size:12px;
+  margin-top:10px;
+}
+
+.greeting{
+  margin-top:35px;
+  max-width:720px;
+  min-height:80px;
+  font-size:clamp(18px,3vw,27px);
+  line-height:1.5;
+  color:#d9edf9;
+}
+
+.voice{
+  margin-top:28px;
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  border:1px solid rgba(92,216,255,.65);
+  background:rgba(10,30,45,.7);
+  color:#7ee4ff;
+  font-size:32px;
+  cursor:pointer;
+  box-shadow:0 0 30px rgba(52,195,255,.25);
+  transition:.25s;
+}
+
+.voice:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 50px rgba(52,195,255,.5);
+}
+
+.voice.listening{
+  animation:pulse 1s infinite;
+  background:#113c55;
+}
+
+.voiceText{
+  margin-top:14px;
+  color:#6f91a9;
+  font-size:12px;
+  letter-spacing:2px;
+}
+
+.products{
+  margin-top:70px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:18px;
+}
+
+.card{
+  padding:22px;
+  border:1px solid rgba(130,190,220,.12);
+  background:rgba(9,18,28,.72);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  box-shadow:0 12px 50px rgba(0,0,0,.3);
+}
+
+.card small{
+  color:#66849b;
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+
+.card h2{
+  margin:10px 0;
+  font-size:20px;
+}
+
+.price{
+  font-size:28px;
+  font-weight:750;
+}
+
+.meta{
+  display:flex;
+  justify-content:space-between;
+  margin-top:15px;
+  color:#8ba5b8;
+  font-size:13px;
+}
+
+.alert{
+  margin-top:14px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:rgba(255,190,70,.07);
+  color:#ffc966;
+  font-size:12px;
+}
+
+.console{
+  margin:30px auto 0;
+  max-width:760px;
+  min-height:70px;
+  padding:18px;
+  border:1px solid rgba(100,190,255,.12);
+  border-radius:16px;
+  background:rgba(3,10,17,.65);
+  color:#89aabd;
+  font-size:13px;
+  text-align:left;
+}
+
+footer{
+  text-align:center;
+  margin-top:65px;
+  color:#405667;
+  font-size:11px;
+  letter-spacing:2px;
+}
+
+@media(max-width:600px){
+  .app{padding-top:20px}
+  header{margin-bottom:30px}
+  .core{width:145px;height:145px}
+  h1{letter-spacing:5px}
+  .products{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+  <div class="logo">AUREVYX</div>
+  <div class="status">
+    <span class="dot"></span>
+    COMMERCE AI
+  </div>
+</header>
+
+<main class="hero">
+
+  <div class="core"></div>
+
+  <h1>AUREVYX</h1>
+  <div class="subtitle">COMMERCE INTELLIGENCE</div>
+
+  <div class="greeting" id="greeting">
+    Initializing your commerce intelligence...
+  </div>
+
+  <button class="voice" id="voiceButton" aria-label="Voice control">
+    🎙️
+  </button>
+
+  <div class="voiceText" id="voiceText">
+    TAP TO SPEAK
+  </div>
+
+  <div class="console" id="console">
+    AUREVYX system ready. Shopify intelligence will appear here when the secure commerce API is connected.
+  </div>
+
+</main>
+
+<section class="products" id="products">
+
+  <div class="card">
+    <small>Store intelligence</small>
+    <h2>Waiting for Shopify</h2>
+    <div class="meta">
+      <span>Products</span>
+      <span>Connecting...</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <small>Voice control</small>
+    <h2>Owner command center</h2>
+    <div class="meta">
+      <span>Status</span>
+      <span>Ready</span>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  AUREVYX • OWNER CONTROL SYSTEM
+</footer>
+
+</div>
+
+<script>
+const greeting = document.getElementById("greeting");
+const voiceButton = document.getElementById("voiceButton");
+const voiceText = document.getElementById("voiceText");
+const consoleBox = document.getElementById("console");
+
+const message =
+  "Good morning, Yash. AUREVYX Commerce Intelligence is ready. Your store briefing will appear here once the secure Shopify connection is active.";
+
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.95;
+  utterance.pitch = 1.0;
+  utterance.volume = 1;
+
+  window.speechSynthesis.speak(utterance);
+}
+
+window.addEventListener("load",()=>{
+  setTimeout(()=>{
+    greeting.textContent = message;
+    speak(message);
+  },900);
+});
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+if(SpeechRecognition){
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-IN";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  voiceButton.onclick = ()=>{
+    recognition.start();
+    voiceButton.classList.add("listening");
+    voiceText.textContent = "LISTENING...";
+    consoleBox.textContent = "Listening for your command...";
+  };
+
+  recognition.onresult = event=>{
+    const text = event.results[0][0].transcript;
+
+    voiceText.textContent = "COMMAND RECEIVED";
+    consoleBox.textContent = "You said: " + text;
+
+    const reply =
+      "I heard your command. The secure Shopify commerce tools will execute it after we connect the backend.";
+
+    greeting.textContent = reply;
+    speak(reply);
+  };
+
+  recognition.onerror = ()=>{
+    voiceText.textContent = "TAP TO SPEAK";
+    consoleBox.textContent = "Microphone recognition could not start.";
+  };
+
+  recognition.onend = ()=>{
+    voiceButton.classList.remove("listening");
+    voiceText.textContent = "TAP TO SPEAK";
+  };
+
+}else{
+  voiceText.textContent = "VOICE NOT SUPPORTED";
+  voiceButton.disabled = true;
+}
+</script>
+
+</body>
+  </html>
